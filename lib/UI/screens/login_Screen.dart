@@ -8,6 +8,7 @@ import 'bottom_nav_bar.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
+  static const String name = '/login';
 
   @override
   State<LoginScreen> createState() => _LoginScreenState();
@@ -106,7 +107,7 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
  void _TapLoginButton(){
- Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>BottomNavBar()),
+ Navigator.pushNamedAndRemoveUntil(context,BottomNavBar.name,
 
      (predicate) => false
  );

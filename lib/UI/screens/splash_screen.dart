@@ -5,6 +5,7 @@ import 'package:taskmanagement/UI/Utilits/svgpictures.dart';
 import 'login_Screen.dart';
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
+  static const String name = '/Splash screen';
 
   @override
   State<SplashScreen> createState() => _SplashScreenState();

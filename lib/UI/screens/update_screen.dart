@@ -4,6 +4,7 @@ import 'package:taskmanagement/UI/screens/widget/background_image.dart';
 
 class UpdateScreen extends StatefulWidget {
   const UpdateScreen({super.key});
+  static const String name = '/signup';
 
   @override
   State<UpdateScreen> createState() => _UpdateScreenState();
@@ -107,12 +108,10 @@ class _UpdateScreenState extends State<UpdateScreen> {
   void _TapLoginButton(){
     Navigator.pop(context);
   }
-
   @override
   void dispose() {
     // TODO: implement dispose
     super.dispose();
-    //kaj sesh e dispose i mean ber hoi jabe
     _EmailTEcontroller.dispose();
     _FirstNameTEcontroller.dispose();
     _LastNameTEcontroller.dispose();

@@ -4,8 +4,9 @@ import 'package:flutter/material.dart';
 import '../update_profile_screen.dart';
 class Tmappbar extends StatelessWidget implements PreferredSizeWidget {
   const Tmappbar({
-    super.key,
+    super.key, this.fromupdatescreen,
   });
+  final bool? fromupdatescreen;
 
   @override
   Widget build(BuildContext context) {
@@ -15,7 +16,13 @@ class Tmappbar extends StatelessWidget implements PreferredSizeWidget {
         spacing: 8,
         children: [
           GestureDetector(
-              onTap: (){
+              onTap:(){
+
+                if(fromupdatescreen ?? false){
+                  return;//false hoile aikane return korbe
+                }
+
+
                 Navigator.push(context, MaterialPageRoute(builder: (context)=>UpdateProfileScreen()));
               },
               child: CircleAvatar()),

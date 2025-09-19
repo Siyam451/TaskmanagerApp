@@ -8,7 +8,7 @@ import 'new_task_screen.dart';
 
 class BottomNavBar extends StatefulWidget {
   const BottomNavBar({super.key});
-
+  static const String name = '/signup';
   @override
   State<BottomNavBar> createState() => _BottomNavBarState();
 }
