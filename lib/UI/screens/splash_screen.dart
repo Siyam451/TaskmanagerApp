@@ -5,7 +5,7 @@ import 'package:taskmanagement/UI/Utilits/svgpictures.dart';
 import 'login_Screen.dart';
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
-  static const String name = '/Splash screen';
+  static const name = '/splash';
 
   @override
   State<SplashScreen> createState() => _SplashScreenState();
@@ -22,7 +22,9 @@ class _SplashScreenState extends State<SplashScreen> {
   }
   Future<void>_moveToNextScreen()async  {
     await Future.delayed(Duration(seconds:3));//animation ashtbe 3 second por kore
-    Navigator.pushReplacement(context, MaterialPageRoute(builder: (_)=>LoginScreen()));
+    Navigator.pushReplacementNamed(context, LoginScreen.name);
+
+
   }
 
   @override

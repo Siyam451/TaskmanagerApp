@@ -48,14 +48,14 @@ class TaskManagerApp extends StatelessWidget {
       ),
       initialRoute: SplashScreen.name,
       routes: {
-        SplashScreen.name: (_)=> SplashScreen(),
-        LoginScreen.name : (_) => LoginScreen(),
-        UpdateScreen.name: (_) => UpdateScreen(),
-        BottomNavBar.name :(_) => BottomNavBar(),
-        UpdateProfileScreen.name :(_) => UpdateProfileScreen(),
-
+        SplashScreen.name: (_) =>  SplashScreen(),
+        LoginScreen.name: (_) =>  LoginScreen(),
+        UpdateScreen.name: (_) =>  UpdateScreen(),
+        BottomNavBar.name: (_) =>  BottomNavBar(),
+        UpdateProfileScreen.name: (_) =>  UpdateProfileScreen(),
       },
-      home: SplashScreen(),
+
+
     );
   }
 }
