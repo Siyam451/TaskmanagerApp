@@ -168,7 +168,7 @@ class _UpdateScreenState extends State<UpdateScreen> {
       "mobile":_MobileTEcontroller.text.trim(),
       "password":_PasswordTEcontroller.text,
     };
-    final ApiResponse response = await ApiCaller().postRequest(
+    final ApiResponse response = await ApiCaller.postRequest(
       url: URLS.registrationurl,
       body: requestBody,
     );
@@ -181,7 +181,7 @@ class _UpdateScreenState extends State<UpdateScreen> {
       ShowSnackbarMassage(context, 'Registration success! please login');
 
     }else{
-      ShowSnackbarMassage(context, response.errorMassage!);//errorMassage ja ase ta show korbe
+      ShowSnackbarMassage(context, response.errorMessage!);//errorMassage ja ase ta show korbe
     }
 
   }

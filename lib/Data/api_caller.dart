@@ -1,137 +1,174 @@
 import 'dart:convert';
-
-import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart';
 import 'package:logger/logger.dart';
+import 'auth_controller.dart';
 
-class ApiCaller{
-  final Logger _logger = Logger();//obj create for logger
-  Future<ApiResponse> getRequest({ required String Url})async { //function
-    //uri ready
-    try {
-      Uri uri = Uri.parse(Url);
-//body ready
-      _logRequest(Url);
+class ApiCaller {
+  static final Logger _logger = Logger();
 
-      Response response = await get(uri);
+  // --- GET Request ---
+  static Future<ApiResponse> getRequest({required String url}) async {
+    await _ensureTokenLoaded();
 
-      _logResponse(Url, response);
-      // debugPrint(Url);
-      // debugPrint(response.statusCode);
-      // debugPrint(response.body);
-
-      final int statuscode = response.statusCode;
-      //success
-      if (statuscode == 200) {
-
-        final decodedData = jsonDecode(response.body);//data must decoded kora lagbe
-        return ApiResponse(isSuccess: true,
-            responsecode: statuscode,
-            responsedata: decodedData
-        );
-      } else {
-        //failed
-        final decodedData = jsonDecode(response.body);
-        return ApiResponse(isSuccess: false,
-          responsecode: statuscode,
-          responsedata: decodedData,
-          errorMassage: decodedData['data'],
-        );
-      }
-    } on Exception catch (e) {// jdi error ashe tkn try catch er maddome shudu jeikane prblm oita off hbe
-      return ApiResponse(isSuccess: false,
-          responsecode: -1,
-          responsedata:null,
-          errorMassage: e.toString()
+    if (AuthController.accessToken == null) {
+      return ApiResponse(
+        isSuccess: false,
+        responseCode: 401,
+        responseData: null,
+        errorMessage: 'Access token missing. Please login.',
       );
+    }
 
+    try {
+      Uri uri = Uri.parse(url);
+      _logRequest(url);
+
+      Response response = await get(uri, headers: {
+        'token': AuthController.accessToken!, // use your backend header
+      });
+
+      _logResponse(url, response);
+      return _handleResponse(response);
+
+    } catch (e) {
+      return ApiResponse(
+        isSuccess: false,
+        responseCode: -1,
+        responseData: null,
+        errorMessage: e.toString(),
+      );
     }
   }
 
-  Future<ApiResponse> postRequest({
-    required String url,
-    required Map<String, dynamic> body,
-  }) async {
+  // --- POST Request ---
+  static Future<ApiResponse> postRequest({required String url, Map<String, dynamic>? body}) async {
+    await _ensureTokenLoaded();
+
+    if (AuthController.accessToken == null) {
+      return ApiResponse(
+        isSuccess: false,
+        responseCode: 401,
+        responseData: null,
+        errorMessage: 'Access token missing. Please login.',
+      );
+    }
+
     try {
       Uri uri = Uri.parse(url);
-
       _logRequest(url, body: body);
 
       Response response = await post(
         uri,
-        headers: {'content-type': 'application/json'},
+        headers: {
+          'content-type': 'application/json',
+          'token': AuthController.accessToken!,
+        },
         body: jsonEncode(body),
       );
 
       _logResponse(url, response);
+      return _handleResponse(response);
 
-      final int statuscode = response.statusCode;
-
-      if (statuscode == 200 || statuscode == 201) {
-        final decodedData = jsonDecode(response.body);
-        return ApiResponse(
-          isSuccess: true,
-          responsecode: statuscode,
-          responsedata: decodedData,
-        );
-      } else {
-        final decodedData = jsonDecode(response.body);
-        return ApiResponse(
-          isSuccess: false,
-          responsecode: statuscode,
-          responsedata: decodedData,
-          errorMassage: decodedData['message'] ?? 'Request failed',
-        );
-      }
     } catch (e) {
       return ApiResponse(
         isSuccess: false,
-        responsecode: -1,
-        responsedata: null,
-        errorMassage: e.toString(),
+        responseCode: -1,
+        responseData: null,
+        errorMessage: e.toString(),
       );
     }
   }
 
+  // --- DELETE Request ---
+  static Future<ApiResponse> deleteRequest({required String url}) async {
+    await _ensureTokenLoaded();
 
-  void _logRequest(String Url,{Map<String,dynamic>? body}){//request er somoy Url ar body dibo
-    _logger.i(
-      'URL => $Url\n'
-          'Request body: $body',
+    if (AuthController.accessToken == null) {
+      return ApiResponse(
+        isSuccess: false,
+        responseCode: 401,
+        responseData: null,
+        errorMessage: 'Access token missing. Please login.',
+      );
+    }
 
-    );
+    try {
+      Uri uri = Uri.parse(url);
+      _logRequest(url);
+
+      Response response = await delete(uri, headers: {
+        'token': AuthController.accessToken!,
+      });
+
+      _logResponse(url, response);
+      return _handleResponse(response);
+
+    } catch (e) {
+      return ApiResponse(
+        isSuccess: false,
+        responseCode: -1,
+        responseData: null,
+        errorMessage: e.toString(),
+      );
+    }
   }
 
+  // --- Private helpers ---
+  static Future<void> _ensureTokenLoaded() async {
+    if (AuthController.accessToken == null) {
+      await AuthController.getData();
+    }
+  }
+//handing unauthorizeing problem
+  static ApiResponse _handleResponse(Response response) {
+    final int statusCode = response.statusCode;
+    final decodedData = jsonDecode(response.body);
 
-  void _logResponse(String Url,Response response){//newar somoy url ar response nibo
-    _logger.i(
-        'URL => $Url\n'
-      'Stutuscode : ${response.statusCode}\n'
-        'body : ${response.body}'
-    );
-
-
+    if (statusCode == 200 || statusCode == 201) {
+      return ApiResponse(
+        isSuccess: true,
+        responseCode: statusCode,
+        responseData: decodedData,
+      );
+      //jdi 401 ashe tkn
+    } else if (statusCode == 401) {
+      return ApiResponse(
+        isSuccess: false,
+        responseCode: statusCode,
+        responseData: null,
+        errorMessage: 'Unauthorized access. Please login again.',
+      );
+    } else {
+      return ApiResponse(
+        isSuccess: false,
+        responseCode: statusCode,
+        responseData: decodedData,
+        errorMessage: decodedData['data'] ?? 'Something went wrong', //postman e j data ase ta nibe
+      );
+    }
   }
 
-
+  static void _logRequest(String url, {Map<String, dynamic>? body}) {
+    _logger.i('URL => $url\nRequest Body: $body');
   }
 
+  static void _logResponse(String url, Response response) {
+    _logger.i('URL => $url\nStatus Code: ${response.statusCode}\nBody: ${response.body}');
+  }
+}
 
-
-// amder ki ki lagbe ta fixed kortesi
+// --- Response Wrapper ---
 class ApiResponse {
   final bool isSuccess;
-  final int responsecode;
-  final dynamic responsedata; //j kono type e responsedata ashte pare tai dynamic nichi
-  final String? errorMassage;
-
+  final int responseCode;
+  final dynamic responseData;
+  final String? errorMessage;
 
   ApiResponse({
-      required this.isSuccess,
-      required this.responsecode,
-      required this.responsedata,
-      this.errorMassage = 'Something went wrong'
-
-});
-
+    required this.isSuccess,
+    required this.responseCode,
+    required this.responseData,
+    this.errorMessage = 'Something went wrong',
+  });
 }

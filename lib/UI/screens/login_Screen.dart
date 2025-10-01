@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:taskmanagement/Data/Utilits/urls.dart';
 import 'package:taskmanagement/Data/api_caller.dart';
+import 'package:taskmanagement/Data/auth_controller.dart';
+import 'package:taskmanagement/Data/models/user_model.dart';
 import 'package:taskmanagement/UI/screens/forgot_password_verify_email.dart';
 import 'package:taskmanagement/UI/screens/splash_screen.dart';
 import 'package:taskmanagement/UI/screens/update_screen.dart';
@@ -137,52 +139,60 @@ class _LoginScreenState extends State<LoginScreen> {
     Navigator.push(context, MaterialPageRoute(builder: (context)=>ForgotPassEmail()));
   }
 
- void _TapLoginButton(){
- Navigator.pushNamedAndRemoveUntil(context,BottomNavBar.name,
+ // void _TapLoginButton(){
+ // Navigator.pushNamedAndRemoveUntil(context,BottomNavBar.name,
+ //
+ //     (predicate) => false
+ // );
+ // }
 
-     (predicate) => false
- );
- }
 
+ Future<void> _login() async {
+   _loginInprogress = true;
+   setState(() {});
 
- Future<void> _login()async{
-    _loginInprogress = true;
-setState(() {
-
-});
-    //request body
-   Map<String,dynamic> requestBody = {
-     "email":_EmailTEcontroller.text.trim(),
-     "password":_PasswordTEcontroller.text,
+   // request body
+   Map<String, dynamic> requestBody = {
+     "email": _EmailTEcontroller.text.trim(),
+     "password": _PasswordTEcontroller.text,
    };
-   //response
-   final ApiResponse response = await ApiCaller().postRequest(
+
+   // ✅ Call static method directly
+   final ApiResponse response = await ApiCaller.postRequest(
      url: URLS.loginurl,
      body: requestBody,
    );
 
-   _loginInprogress = false;
-   setState(() {});
+   if (response.isSuccess && response.responseData['status'] == 'success') {
+     UserModel model = UserModel.fromJson(response.responseData['data']);
+     String accessToken = response.responseData['token'];
 
+     // Save user + token
+     await AuthController().saveData(model, accessToken);
 
-   if(response.isSuccess && response.responsedata['status']=='success') {
-     Navigator.pushNamedAndRemoveUntil(context, BottomNavBar.name,
-             (predicate)=>false);
-     ShowSnackbarMassage(context, ' login successfull');
+     Navigator.pushNamedAndRemoveUntil(
+       context,
+       BottomNavBar.name,
+           (predicate) => false,
+     );
 
-   }else{
-     ShowSnackbarMassage(context, response.errorMassage!);//errorMassage ja ase ta show korbe
+     ShowSnackbarMassage(context, 'Login successful');
+   } else {
+     _loginInprogress = false;
+     setState(() {});
+     ShowSnackbarMassage(context, response.errorMessage!);
    }
-
  }
-  @override
-  void dispose() {
-    // TODO: implement dispose
-    super.dispose();
-    //kaj sesh e dispose i mean ber hoi jabe
+ @override
+ void dispose() {
+   // TODO: implement dispose
+   super.dispose();
+   //kaj sesh e dispose i mean ber hoi jabe
 
-    _EmailTEcontroller.dispose();
-    _PasswordTEcontroller.dispose();
-  }
+   _EmailTEcontroller.dispose();
+   _PasswordTEcontroller.dispose();
+ }
+
 }
+
 
