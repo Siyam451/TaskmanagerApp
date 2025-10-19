@@ -30,6 +30,7 @@ class _TaskcardState extends State<Taskcard> {
           padding: const EdgeInsets.all(16.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
             children: [
               Text(
                 widget.taskmodel.title,
@@ -45,7 +46,7 @@ class _TaskcardState extends State<Taskcard> {
                   color: Colors.black,
                 ),
               ),
-              const SizedBox(height: 15),
+               SizedBox(height: 7),
               Row(
                 children: [
                   Chip(

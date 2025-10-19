@@ -12,6 +12,7 @@ import 'package:taskmanagement/UI/screens/widget/background_image.dart';
 import 'package:taskmanagement/UI/screens/widget/center_inprogress.dart';
 import 'package:taskmanagement/UI/screens/widget/snack_bar.dart';
 
+import '../../Data/models/task_model.dart';
 import 'bottom_nav_bar.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -136,7 +137,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
 
   void _TapForgotPassword(){
-    Navigator.push(context, MaterialPageRoute(builder: (context)=>ForgotPassEmail()));
+    Navigator.push(context, MaterialPageRoute(builder: (context)=>ForgotPassEmail(email: _EmailTEcontroller.text,)));
   }
 
  // void _TapLoginButton(){
@@ -168,7 +169,7 @@ class _LoginScreenState extends State<LoginScreen> {
      String accessToken = response.responseData['token'];
 
      // Save user + token
-     await AuthController().saveData(model, accessToken);
+     await AuthController.saveData(model, accessToken);
 
      Navigator.pushNamedAndRemoveUntil(
        context,

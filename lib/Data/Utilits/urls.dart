@@ -8,9 +8,15 @@ class URLS{
   static const String ProgresstaskListurl = '$_baseurl/listTaskByStatus/Progress';
   static  String Updatetaskstatusurl(String id, String status) => '$_baseurl/updateTaskStatus/$id/$status';
   static const String CompletetaskListurl = '$_baseurl/listTaskByStatus/Completed';
-  static const String CanceledtaskListurl = '$_baseurl/listTaskByStatus/Canceled';
+  static const String CanceledtaskListurl = '$_baseurl/listTaskByStatus/Cancelled';
   static  String Deletetaskstatusurl(String id,) => '$_baseurl/deleteTask/$id';
+  static const String ProfileUpdateurl = '$_baseurl/ProfileUpdate';
+  static  String RecoverVerifyEmailurl(String email) => '$_baseurl/RecoverVerifyEmail/$email';
+  static String RecoverVerifyOtpurl(String email, String otp) =>
+      '$_baseurl/RecoverVerifyOtp/$email/$otp';
+  static const String RecoverResetPasswordurl = '$_baseurl/RecoverResetPassword';
 
 
 
+  //RecoverVerifyEmail/email@gmail.com
 }

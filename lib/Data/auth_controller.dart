@@ -10,7 +10,7 @@ class AuthController {
   static String? accessToken;
   static UserModel? userModel;
 
-  Future<void> saveData(UserModel model, String token) async {
+  static Future<void> saveData(UserModel model, String token) async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();//nijer ekta instance ready kore nilo
 
     // save data in shared preferences
@@ -22,6 +22,12 @@ class AuthController {
 
     // cache in memory
     accessToken = token;
+    userModel = model;
+  }
+
+  static Future<void> updateUserData(UserModel model) async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    await sharedPreferences.setString(_userModelKey, jsonEncode(model.toJson()));
     userModel = model;
   }
 

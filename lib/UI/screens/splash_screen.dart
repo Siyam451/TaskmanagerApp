@@ -22,20 +22,19 @@ class _SplashScreenState extends State<SplashScreen> {
     super.initState();
     _moveToNextScreen();
   }
-  Future<void>_moveToNextScreen()async  {
-    await Future.delayed(Duration(seconds:3));//animation ashtbe 3 second por kore
-    //nicher line gula check korbe user ageh theke login ase kina... jdi thake taile direct app e dukhai dibe
-    final bool IsloggedIn = await AuthController.IsUserloggedIn();
-    if(IsloggedIn){
-      await AuthController.getData();//data diye dibe
+  Future<void> _moveToNextScreen() async {
+    await Future.delayed(const Duration(seconds: 3));
+    await AuthController.getData();
+    final bool isLoggedIn = await AuthController.IsUserloggedIn();
+
+    if (isLoggedIn) {
+
       Navigator.pushReplacementNamed(context, BottomNavBar.name);
-    }else{
-      //jdi login na thaki taile amk login screen e pathai dibe
+    } else {
+      Navigator.pushReplacementNamed(context, LoginScreen.name);
     }
-    Navigator.pushReplacementNamed(context, LoginScreen.name);
-
-
   }
+
 
   @override
   Widget build(BuildContext context) {

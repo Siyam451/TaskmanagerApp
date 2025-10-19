@@ -9,6 +9,7 @@ import 'UI/screens/splash_screen.dart';
 class TaskManagerApp extends StatelessWidget {
   const TaskManagerApp({super.key});
 
+  static GlobalKey<NavigatorState> navigator = GlobalKey<NavigatorState>();
   @override
   Widget build(BuildContext context) {
     return MaterialApp(

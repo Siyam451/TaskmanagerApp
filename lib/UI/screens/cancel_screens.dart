@@ -18,7 +18,7 @@ class CancelScreens extends StatefulWidget {
 class _CancelScreensState extends State<CancelScreens> {
   List<Taskmodel> _CancelTaskList = [];
   bool _CanceltaskInProgress = false;
-  
+
   @override
   void initState() {
     // TODO: implement initState
@@ -26,8 +26,8 @@ class _CancelScreensState extends State<CancelScreens> {
 
     _getCanceltask();
   }
-  
-  
+
+
   Future<void> _getCanceltask() async {
     _CanceltaskInProgress = true;
     setState(() {

@@ -1,13 +1,18 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:taskmanagement/UI/screens/pin_verification_screen.dart';
-import 'package:taskmanagement/UI/screens/update_screen.dart';
+import 'package:taskmanagement/Data/Utilits/urls.dart';
+import 'package:taskmanagement/Data/api_caller.dart';
+
 import 'package:taskmanagement/UI/screens/widget/background_image.dart';
+import 'package:taskmanagement/UI/screens/widget/center_inprogress.dart';
+import 'package:taskmanagement/UI/screens/widget/snack_bar.dart';
 
 import 'login_Screen.dart';
 
 class Passwordsetscreen extends StatefulWidget {
-  const Passwordsetscreen({super.key});
+  const Passwordsetscreen({super.key, required this.email, required this.otp});
+  final String email;
+  final String otp;
 
   @override
   State<Passwordsetscreen> createState() => _PasswordsetscreenState();
@@ -16,8 +21,11 @@ class Passwordsetscreen extends StatefulWidget {
 class _PasswordsetscreenState extends State<Passwordsetscreen> {
   final TextEditingController _SetPasswordTEcontroller = TextEditingController();
   final TextEditingController _ConfirmPasswordTEcontroller = TextEditingController();
+  final TextEditingController _EmailTEcontroller = TextEditingController();
+  final TextEditingController _OtpTEcontroller = TextEditingController();
   late TapGestureRecognizer _signUpRecognizer;
   final GlobalKey<FormState> _formkey = GlobalKey<FormState>();
+  bool _resetpassInprogress = false;
   @override
   void initState() {
     // TODO: implement initState
@@ -60,10 +68,14 @@ class _PasswordsetscreenState extends State<Passwordsetscreen> {
 
                   SizedBox(height: 20,),
 
-                  FilledButton(
-                      onPressed:
-                      _TapSignUpButton
-                      , child: Text('Confirm')),
+                  Visibility(
+                    visible: _resetpassInprogress== false,
+                    replacement: CenterInprogressbar(),
+                    child: FilledButton(
+                        onPressed:
+                        _TapSignUpButton
+                        , child: Text('Confirm')),
+                  ),
                   SizedBox(height: 50,),
                   Center(
                     child: Column(
@@ -98,11 +110,58 @@ class _PasswordsetscreenState extends State<Passwordsetscreen> {
   }
 
   void _TapSignUpButton(){
-    Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>LoginScreen()),
-            (predicate)=>false
+    final password = _SetPasswordTEcontroller.text.trim();
+    final confirmPassword = _ConfirmPasswordTEcontroller.text.trim();
+    if(password.isEmpty || confirmPassword.isEmpty){
+      ShowSnackbarMassage(context, 'please enter valid number');
+      return;
+    }
 
-    );
+    if(password.length < 6){
+      ShowSnackbarMassage(context, 'please enter more then 6 numbers');
+      return;
+    }
+    if(password != confirmPassword){
+      ShowSnackbarMassage(context, 'Password dont match');
+      return;
+    }
+    _Resetpassword();
+
   }
+
+
+  Future<void> _Resetpassword() async {
+    _resetpassInprogress = true;
+    setState(() {});
+
+    Map<String, dynamic> requestbody = {
+      "email": widget.email,
+      "otp": widget.otp,
+      "password": _SetPasswordTEcontroller.text.trim(),
+    };
+
+    print("Sending reset body: $requestbody");
+
+    final ApiResponse response = await ApiCaller.postRequest(
+      url: URLS.RecoverResetPasswordurl,
+      body: requestbody,
+    );
+
+    _resetpassInprogress = false;
+    setState(() {});
+
+
+    if (response.isSuccess) {
+      ShowSnackbarMassage(context, response.responseData['data']);
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (ctx) =>  LoginScreen()),
+      );
+    } else {
+      ShowSnackbarMassage(context, response.errorMessage!);
+    }
+  }
+
 
   @override
   void dispose() {
@@ -112,6 +171,8 @@ class _PasswordsetscreenState extends State<Passwordsetscreen> {
 
     _SetPasswordTEcontroller.dispose();
     _ConfirmPasswordTEcontroller.dispose();
+    _EmailTEcontroller.dispose();
+    _OtpTEcontroller.dispose();
 
   }
 }

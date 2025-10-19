@@ -1,4 +1,8 @@
 
+import 'dart:convert';
+import 'dart:typed_data';
+
+
 import 'package:flutter/material.dart';
 import 'package:taskmanagement/Data/auth_controller.dart';
 import 'package:taskmanagement/UI/screens/login_Screen.dart';
@@ -19,13 +23,14 @@ class Tmappbar extends StatefulWidget implements PreferredSizeWidget {
 class _TmappbarState extends State<Tmappbar> {
   @override
   Widget build(BuildContext context) {
+    final profilePhoto = AuthController.userModel!.photo;
     return AppBar(
       backgroundColor: Colors.green,
       title: Row(
         children: [
           GestureDetector(
             onTap: () {
-              if (widget.fromupdatescreen ?? false) {
+              if (widget.fromupdatescreen ?? false) { //nijer screen theke nijer screen e bar bar ashbe na
                 return; // return if opened from update screen
               }
               Navigator.push(
@@ -35,9 +40,20 @@ class _TmappbarState extends State<Tmappbar> {
                 ),
               );
             },
-            child: const CircleAvatar(),
+            child:  CircleAvatar(
+              //jdi emtey na hoi tkn jsondecode kore string theke int te convert kore chobi ta show korbe
+              // ar na hoi person er icon ta show korbe
+              child: profilePhoto.isNotEmpty
+                  ? Image.memory(
+                  Uint8List.fromList(List<int>.from(jsonDecode(profilePhoto)))
+              )
+                  : Icon(Icons.person),
+
+
+
+            ),
           ),
-          const SizedBox(width: 8), // spacing instead of Row.spacing
+          // SizedBox(width: 8), // spacing instead of Row.spacing
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [

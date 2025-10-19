@@ -4,6 +4,7 @@ class UserModel {
   final String firstname;
   final String lastname;
   final String mobile;
+  final String photo;
 
   String get fullname{
     return '$firstname $lastname';
@@ -15,6 +16,7 @@ class UserModel {
     required this.firstname,
     required this.lastname,
     required this.mobile,
+    required this.photo,
   });
 
   factory UserModel.fromJson(Map<String, dynamic> jsonData) {//factory = j nije k nije constructor banaite pare
@@ -24,6 +26,7 @@ class UserModel {
       firstname: jsonData['firstName'],
       lastname: jsonData['lastName'],
       mobile: jsonData['mobile'],
+      photo: jsonData['photo'] ?? '' // dile takbe ar na hoi empty takbe
     );
   }
 
@@ -33,7 +36,8 @@ class UserModel {
       'email' : email,
       'firstName' : firstname,
       'lastName' : lastname,
-      'mobile' : mobile
+      'mobile' : mobile,
+      'photo' : photo,
 
     };
 
