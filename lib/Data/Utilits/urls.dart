@@ -14,9 +14,10 @@ class URLS{
   static  String RecoverVerifyEmailurl(String email) => '$_baseurl/RecoverVerifyEmail/$email';
   static String RecoverVerifyOtpurl(String email, String otp) =>
       '$_baseurl/RecoverVerifyOtp/$email/$otp';
-  static const String RecoverResetPasswordurl = '$_baseurl/RecoverResetPassword';
+  static String RecoverResetPasswordurl = 'http://35.73.30.144:2005/api/v1/RecoverResetPassword';
 
 
 
-  //RecoverVerifyEmail/email@gmail.com
+
+//RecoverVerifyEmail/email@gmail.com
 }

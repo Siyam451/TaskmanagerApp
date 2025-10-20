@@ -135,8 +135,8 @@ class _PasswordsetscreenState extends State<Passwordsetscreen> {
     setState(() {});
 
     Map<String, dynamic> requestbody = {
-      "email": widget.email,
-      "otp": widget.otp,
+      "email": _EmailTEcontroller.text.trim(),
+      "OTP": _OtpTEcontroller.text.trim(),
       "password": _SetPasswordTEcontroller.text.trim(),
     };
 
