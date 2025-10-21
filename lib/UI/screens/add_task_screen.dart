@@ -51,6 +51,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                    ),
                    SizedBox(height: 10,),
                    TextFormField(
+                     controller: _descriptionTEcontroller,
                      textInputAction: TextInputAction.next,
                      maxLines: 6,
                      decoration: InputDecoration(

@@ -135,12 +135,11 @@ class _PasswordsetscreenState extends State<Passwordsetscreen> {
     setState(() {});
 
     Map<String, dynamic> requestbody = {
-      "email": _EmailTEcontroller.text.trim(),
-      "OTP": _OtpTEcontroller.text.trim(),
+      "email": widget.email,
+      "OTP": widget.otp,
       "password": _SetPasswordTEcontroller.text.trim(),
     };
 
-    print("Sending reset body: $requestbody");
 
     final ApiResponse response = await ApiCaller.postRequest(
       url: URLS.RecoverResetPasswordurl,

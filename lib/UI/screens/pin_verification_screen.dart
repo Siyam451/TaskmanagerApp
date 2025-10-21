@@ -143,7 +143,7 @@ Future<void> _SendOtp()async{
         ShowSnackbarMassage(context, 'Verified successfully');
         Navigator.push(
             context,
-            MaterialPageRoute(builder: (ctx) => Passwordsetscreen(email: _EmailOTPTEcontroller.text,otp: _otpTextController.text,)));
+            MaterialPageRoute(builder: (ctx) => Passwordsetscreen(email: widget.email,otp: _otpTextController.text,)));
       }else{
         ShowSnackbarMassage(context, response.errorMessage!);
       }
