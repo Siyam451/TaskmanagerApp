@@ -1,4 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:taskmanagement/Data/controller/add_newTask_provider.dart';
+import 'package:taskmanagement/Data/controller/cancel_provider.dart';
+import 'package:taskmanagement/Data/controller/complete_provider.dart';
+import 'package:taskmanagement/Data/controller/progress_provider.dart';
 import 'package:taskmanagement/UI/screens/bottom_nav_bar.dart';
 import 'package:taskmanagement/UI/screens/login_Screen.dart';
 import 'package:taskmanagement/UI/screens/update_profile_screen.dart';
@@ -12,51 +17,59 @@ class TaskManagerApp extends StatelessWidget {
   static GlobalKey<NavigatorState> navigator = GlobalKey<NavigatorState>();
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      theme: ThemeData(
-        textTheme: TextTheme(
-          titleLarge: TextStyle(
-            fontSize: 28,
-            fontWeight: FontWeight.w600,
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_)=> NewtaskListProvider()),
+        ChangeNotifierProvider(create: (_)=> ProgressScreenProvider()),
+        ChangeNotifierProvider(create: (_)=> CancelScreenProvider()),
+        ChangeNotifierProvider(create: (_)=> CompleteScreenProvider()),
+      ],
+      child: MaterialApp(
+        theme: ThemeData(
+          textTheme: TextTheme(
+            titleLarge: TextStyle(
+              fontSize: 28,
+              fontWeight: FontWeight.w600,
+            )
+          ),
+          colorSchemeSeed: Colors.green,//tap korle green effect dekhabe
+          inputDecorationTheme: InputDecorationTheme(
+            fillColor: Colors.white,
+            filled: true,
+            hintStyle: TextStyle(color: Colors.grey),
+            border: OutlineInputBorder(
+                borderSide: BorderSide.none
+            ),
+            enabledBorder: OutlineInputBorder(
+                borderSide: BorderSide.none
+            ),
+            errorBorder: OutlineInputBorder(
+                borderSide: BorderSide.none
+            ),
+          ),
+
+          filledButtonTheme: FilledButtonThemeData(
+            style: FilledButton.styleFrom(
+                fixedSize:Size.fromWidth(double.maxFinite),
+                padding: EdgeInsets.symmetric(vertical: 12),
+                backgroundColor: Colors.green,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                )
+            ),
           )
         ),
-        colorSchemeSeed: Colors.green,//tap korle green effect dekhabe
-        inputDecorationTheme: InputDecorationTheme(
-          fillColor: Colors.white,
-          filled: true,
-          hintStyle: TextStyle(color: Colors.grey),
-          border: OutlineInputBorder(
-              borderSide: BorderSide.none
-          ),
-          enabledBorder: OutlineInputBorder(
-              borderSide: BorderSide.none
-          ),
-          errorBorder: OutlineInputBorder(
-              borderSide: BorderSide.none
-          ),
-        ),
+        initialRoute: SplashScreen.name,
+        routes: {
+          SplashScreen.name: (_) =>  SplashScreen(),
+          LoginScreen.name: (_) =>  LoginScreen(),
+          UpdateScreen.name: (_) =>  UpdateScreen(),
+          BottomNavBar.name: (_) =>  BottomNavBar(),
+          UpdateProfileScreen.name: (_) =>  UpdateProfileScreen(),
+        },
 
-        filledButtonTheme: FilledButtonThemeData(
-          style: FilledButton.styleFrom(
-              fixedSize:Size.fromWidth(double.maxFinite),
-              padding: EdgeInsets.symmetric(vertical: 12),
-              backgroundColor: Colors.green,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10),
-              )
-          ),
-        )
+
       ),
-      initialRoute: SplashScreen.name,
-      routes: {
-        SplashScreen.name: (_) =>  SplashScreen(),
-        LoginScreen.name: (_) =>  LoginScreen(),
-        UpdateScreen.name: (_) =>  UpdateScreen(),
-        BottomNavBar.name: (_) =>  BottomNavBar(),
-        UpdateProfileScreen.name: (_) =>  UpdateProfileScreen(),
-      },
-
-
     );
   }
 }

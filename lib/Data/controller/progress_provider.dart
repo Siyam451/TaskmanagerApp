@@ -1,42 +1,39 @@
 import 'package:flutter/cupertino.dart';
-
 import '../Utilits/urls.dart';
 import '../api_caller.dart';
 
 import '../models/task_model.dart';
 //aikane kono UI er kaj hoi na
-class NewtaskListProvider extends ChangeNotifier {
-  bool _AddTaskInprogress = false;
+class ProgressScreenProvider extends ChangeNotifier {
+  bool _progressInprogress = false;
   String? _errorMassage;
-  List<Taskmodel> _newTaskList = [];
+  List<Taskmodel> _progressTaskList = [];
 
-  bool get AddTaskInprogress => _AddTaskInprogress; //private method k acess korte get method use korlam
+  bool get progressInprogress => _progressInprogress;
+  List<Taskmodel> get progressTaskList => _progressTaskList; //private method k acess korte get method use korlam
   String? get errorMassage => _errorMassage;
-  List<Taskmodel> get newTaskList => _newTaskList;
 
-  Future<bool>getnewtask() async {
+
+  Future<bool>getProgresstask() async {
     bool isSuccess = false;
-    _AddTaskInprogress = true;
+    _progressInprogress = true;
     notifyListeners();
 //api call
     final ApiResponse response = await ApiCaller.getRequest(
-      url: URLS.NewtaskListurl,
+      url: URLS.ProgresstaskListurl,
     );
 //ki hoile ki hbe ta
     if (response.isSuccess) {
       List<Taskmodel> list = [];
-
       for (Map<String, dynamic> jsonData in response.responseData['data']) {
-        list.add(Taskmodel.fromJson(jsonData)); //add kore dibo
+        list.add(Taskmodel.fromJson(jsonData));
       }
-
-      _newTaskList = list;
-      isSuccess = true;
+      _progressTaskList = list;
     } else {
-      _errorMassage = response.errorMessage;
+      _errorMassage = response.errorMessage!;
     }
 
-    _AddTaskInprogress = false;
+    _progressInprogress = false;
     notifyListeners();
     return isSuccess;
   }
