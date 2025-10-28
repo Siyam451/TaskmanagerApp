@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:taskmanagement/Data/Utilits/urls.dart';
-import 'package:taskmanagement/Data/api_caller.dart';
+import 'package:provider/provider.dart';
+import 'package:taskmanagement/Data/controller/addNewTask_provider.dart';
 import 'package:taskmanagement/UI/screens/widget/background_image.dart';
 import 'package:taskmanagement/UI/screens/widget/center_inprogress.dart';
 import 'package:taskmanagement/UI/screens/widget/snack_bar.dart';
@@ -17,75 +17,82 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
  final TextEditingController _titleTEcontroller = TextEditingController();
   final TextEditingController _descriptionTEcontroller = TextEditingController();
   final GlobalKey<FormState> _formkey = GlobalKey<FormState>();
-  bool _addNewInprogress = false;
+
+  final AddnewtaskProvider _addnewtaskProvider = AddnewtaskProvider();
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: Tmappbar(),
-      body: BackgroundImage(
-          child: SingleChildScrollView(
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-             child: Form(
-               key: _formkey,
-               child: Column(
-                 crossAxisAlignment:  CrossAxisAlignment.start,
-                 children: [
+    return ChangeNotifierProvider(
+      create: (_)=> _addnewtaskProvider, //single vabe aivabe kora jai
+      child: Scaffold(
+        appBar: Tmappbar(),
+        body: BackgroundImage(
+            child: SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+               child: Form(
+                 key: _formkey,
+                 child: Column(
+                   crossAxisAlignment:  CrossAxisAlignment.start,
+                   children: [
 
-                   Text('Add New Task',style: Theme.of(context).textTheme.titleLarge),
-                   SizedBox(height: 40,),
-                   TextFormField(
-                     controller: _titleTEcontroller,
-                     textInputAction: TextInputAction.next,
-                     decoration: InputDecoration(
-                       hintText: 'Title',
-                     ),
-                     validator: (String ? value){
-                       if(value?.trim().isEmpty ?? true){
-                         return 'Enter your title';
-                       }else{
-                         return null;
-                       }
-                     }
-                   ),
-                   SizedBox(height: 10,),
-                   TextFormField(
-                     controller: _descriptionTEcontroller,
-                     textInputAction: TextInputAction.next,
-                     maxLines: 6,
-                     decoration: InputDecoration(
-                       hintText: 'Description',
-                     ),
+                     Text('Add New Task',style: Theme.of(context).textTheme.titleLarge),
+                     SizedBox(height: 40,),
+                     TextFormField(
+                       controller: _titleTEcontroller,
+                       textInputAction: TextInputAction.next,
+                       decoration: InputDecoration(
+                         hintText: 'Title',
+                       ),
                        validator: (String ? value){
                          if(value?.trim().isEmpty ?? true){
-                           return 'Enter your description';
+                           return 'Enter your title';
                          }else{
                            return null;
                          }
                        }
-                   ),
-                   SizedBox(
-                     height: 10,
-                   ),
-                   Visibility(
+                     ),
+                     SizedBox(height: 10,),
+                     TextFormField(
+                       controller: _descriptionTEcontroller,
+                       textInputAction: TextInputAction.next,
+                       maxLines: 6,
+                       decoration: InputDecoration(
+                         hintText: 'Description',
+                       ),
+                         validator: (String ? value){
+                           if(value?.trim().isEmpty ?? true){
+                             return 'Enter your description';
+                           }else{
+                             return null;
+                           }
+                         }
+                     ),
+                     SizedBox(
+                       height: 10,
+                     ),
+                     Consumer<AddnewtaskProvider>(
+                       builder: (context,addnewtaskProvider,_) {
+                         return Visibility(
+                             visible: addnewtaskProvider.addTaskInprogress == false,
+                             replacement: CenterInprogressbar(),
+                             child: FilledButton(onPressed: _AddTaskbutton, child: Text('Add')));
+                       }
+                     )
 
-                       visible: _addNewInprogress == false,
-                       replacement: CenterInprogressbar(),
-                       child: FilledButton(onPressed: _AddTaskbutton, child: Text('Add')))
-
-                 ],
-               ),
-             )
+                   ],
+                 ),
+               )
 
 
-              ),
-    )
+                ),
+      )
 
 
-          )
+            )
 
 
+      ),
     );
   }
 
@@ -99,32 +106,20 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
 
 
   Future<void> _addNewTask()async{
-    _addNewInprogress =true;
-    setState(() {
 
-    });
-    Map<String,dynamic> requestbody = {
+    final bool isSucess = await _addnewtaskProvider.AddnewTask(
+      _titleTEcontroller.text.trim(),
+          _descriptionTEcontroller.text.trim()
 
-      "title":_titleTEcontroller.text.trim(),
-      "description": _descriptionTEcontroller.text.trim(),
-      "status":"New"
-    };
-    
-    final ApiResponse response = await ApiCaller.postRequest(
-        url: URLS.createtaskurl,
-        body: requestbody);
+    );
 
-    _addNewInprogress =false;
-    setState(() {
 
-    });
-
-    if(response.isSuccess){
+    if(isSucess){
       _clearTextfield();
       ShowSnackbarMassage(context, 'New task added');
       Navigator.pop(context,true);
     }else{
-      ShowSnackbarMassage(context, response.errorMessage!);
+      ShowSnackbarMassage(context, _addnewtaskProvider.errorMassage!);
 
     }
 

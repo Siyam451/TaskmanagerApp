@@ -168,8 +168,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
      ShowSnackbarMassage(context, 'Login successful');
    } else {
-     _loginInprogress = false;
-     setState(() {});
+
      ShowSnackbarMassage(context,_loginprovider.errorMassage!);
    }
  }

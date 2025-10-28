@@ -22,7 +22,10 @@ class _ProgressScreenState extends State<ProgressScreen> {
   @override
   void initState() {
     super.initState();
-    context.read<ProgressScreenProvider>().getProgresstask();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<ProgressScreenProvider>().getProgresstask();
+    });
+
 
   }
 

@@ -21,7 +21,9 @@ class _CancelScreensState extends State<CancelScreens> {
     // TODO: implement initState
     super.initState();
 
-  context.read<CancelScreenProvider>().getCanceltask();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<CancelScreenProvider>().getCanceltask();
+    });
   }
 
 

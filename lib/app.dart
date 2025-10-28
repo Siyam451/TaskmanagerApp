@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:taskmanagement/Data/controller/add_newTask_provider.dart';
+import 'package:taskmanagement/Data/controller/newTask_provider.dart';
 import 'package:taskmanagement/Data/controller/cancel_provider.dart';
 import 'package:taskmanagement/Data/controller/complete_provider.dart';
 import 'package:taskmanagement/Data/controller/progress_provider.dart';

@@ -25,7 +25,9 @@ class _CompleteScreenState extends State<CompleteScreen> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    context.read<CompleteScreenProvider>().getCompletetask();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<CompleteScreenProvider>().getCompletetask();
+    });
   }
 
 
