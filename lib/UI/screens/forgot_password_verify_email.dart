@@ -135,28 +135,28 @@ class _ForgotPassEmailState extends State<ForgotPassEmail> {
     }
   }
 
-  Future<void> _VerifyEmail() async {
-    final bool isSucess = await _forgetpassEmailProvider.getForgetEmailTask(
-      _EmailTEcontroller.text.trim(),
-    );
-    try {
-      final String url = URLS.RecoverVerifyEmailurl(Uri.encodeComponent(_EmailTEcontroller.text.trim()));
-
-      if (isSucess) {
-        ShowSnackbarMassage(context, "Verification code sent");
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (ctx) => PinVerificationScreen(email: _EmailTEcontroller.text.trim()),
-          ),
-        );
-      } else {
-        ShowSnackbarMassage(context, _forgetpassEmailProvider.errorMessage ?? 'Something went wrong');
-      }
-    } catch (e) {
-      ShowSnackbarMassage(context, 'Something went wrong');
-    }
-  }
+  // Future<void> _VerifyEmail() async {
+  //   final bool isSucess = await _forgetpassEmailProvider.getForgetEmailTask(
+  //     _EmailTEcontroller.text.trim(),
+  //   );
+  //   try {
+  //     final String url = URLS.RecoverVerifyEmailurl(Uri.encodeComponent(_EmailTEcontroller.text.trim()));
+  //
+  //     if (isSucess) {
+  //       ShowSnackbarMassage(context, "Verification code sent");
+  //       Navigator.push(
+  //         context,
+  //         MaterialPageRoute(
+  //           builder: (ctx) => PinVerificationScreen(email: _EmailTEcontroller.text.trim()),
+  //         ),
+  //       );
+  //     } else {
+  //       ShowSnackbarMassage(context, _forgetpassEmailProvider.errorMessage ?? 'Something went wrong');
+  //     }
+  //   } catch (e) {
+  //     ShowSnackbarMassage(context, 'Something went wrong');
+  //   }
+  // }
 
   @override
   void dispose() {
