@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:taskmanagement/Data/auth_controller.dart';
 import 'package:taskmanagement/Data/controller/update_screen_provider.dart';
 import 'package:taskmanagement/Data/models/user_model.dart';
+import 'package:taskmanagement/UI/screens/new_task_screen.dart';
 import 'package:taskmanagement/UI/screens/widget/background_image.dart';
 import 'package:taskmanagement/UI/screens/widget/center_inprogress.dart';
 import 'package:taskmanagement/UI/screens/widget/snack_bar.dart';
@@ -30,6 +31,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
   final GlobalKey<FormState> _formkey = GlobalKey<FormState>();
   final ImagePicker _imagePicker = ImagePicker();//function call for image
  // XFile? _SelectedImage;
+  final UpdateScreenProvider _updateScreenProvider = UpdateScreenProvider();
 
 
 
@@ -49,8 +51,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
       create: (_)=> UpdateScreenProvider(),
-        builder: (context,_) {
-          return Scaffold(
+        child:Scaffold(
             appBar: Tmappbar(
               fromupdatescreen: true,
             ),
@@ -163,8 +164,12 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                                 replacement: CenterInprogressbar(),
                                 child: FilledButton(
 
-                               onPressed: _TapUpdatebutton, // tap korle jdi valid hoi taile change korbe
-                                    child: Icon(Icons.arrow_circle_right,)),
+                               onPressed:(){
+                                 _TapUpdatebutton();
+
+                                 }, // tap korle jdi valid hoi taile change korbe
+                                 child: Icon(Icons.arrow_circle_right,
+                               )),
                               );
                             }
                           ),
@@ -174,8 +179,8 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                   ),
                 ),
             ),
-            );
-        }
+            )
+
 
     );
   }
@@ -186,12 +191,14 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
      if(_formkey.currentState!.validate()){
        _updateProfile();
 
+       Navigator.push(context, MaterialPageRoute(builder: (context)=>NewTaskScreen()));
+
      }
   }
 
   Future<void> _updateProfile()async{
-     final Updateprovider = context.read<UpdateScreenProvider>();
-     final bool isSucess = await Updateprovider.postUpdateScreen(email: _EmailTEcontroller.text.trim(),
+
+     final bool isSucess = await _updateScreenProvider.postUpdateScreen(email: _EmailTEcontroller.text.trim(),
          firstName: _FirstNameTEcontroller.text.trim(),
        lastName:_LastNameTEcontroller.text.trim(),
          mobile: _MobileTEcontroller.text.trim(),
@@ -204,7 +211,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
        _PasswordTEcontroller.clear();
        ShowSnackbarMassage(context, 'Profile Has been Updated');
      }else{
-       ShowSnackbarMassage(context,Updateprovider.errorMessage!);
+       ShowSnackbarMassage(context,_updateScreenProvider.errorMessage!);
      }
   }
   // Future<void> _PickImage()async{

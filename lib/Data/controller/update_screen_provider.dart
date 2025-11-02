@@ -27,7 +27,8 @@ class UpdateScreenProvider extends ChangeNotifier {
     required String mobile,
     required String password,
   }) async {
-   // bool isSuccess = false;
+    _errorMessage = null;
+    bool isSuccess = false;
     _updateScreenInProgress = true;
     notifyListeners();
 
@@ -42,12 +43,11 @@ class UpdateScreenProvider extends ChangeNotifier {
     if (password.isNotEmpty) {
       requestBody['password'] = password;
     }
-
     //  handle image encoding if user selected one
     String? encodedPhoto;
     if (_selectedImage != null) {
       List<int> bytes = await _selectedImage!.readAsBytes();
-      encodedPhoto = base64Encode(bytes); // use base64Encode, not jsonEncode
+      encodedPhoto = base64Encode(bytes);
       requestBody['photo'] = encodedPhoto;
     }
 
@@ -59,8 +59,8 @@ class UpdateScreenProvider extends ChangeNotifier {
     notifyListeners();
 
     if (response.isSuccess) {
-     // isSuccess = true;
-      // Update locally stored user model
+      isSuccess = true;
+
       UserModel model = UserModel(
         id: AuthController.userModel!.id,
         email: email.trim(),
@@ -71,11 +71,15 @@ class UpdateScreenProvider extends ChangeNotifier {
       );
 
       await AuthController.updateUserData(model);
+      AuthController.userModel = model;
+      _selectedImage = null;
+      notifyListeners();
       return true;
 
     } else {
       _errorMessage = response.errorMessage;
-      return false;
+      notifyListeners();
+      return isSuccess;
     }
   }
 }
