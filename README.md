@@ -22,7 +22,7 @@
 <img width="120" height="160" alt="image" src="https://github.com/user-attachments/assets/9fce7143-92bd-407c-a308-ed3fffc8aed3" />
 <img width="120" height="160" alt="image" src="https://github.com/user-attachments/assets/57bf8493-4f0a-4b98-944f-7a9a1481fea8" />
 <img width="120" height="160" alt="image" src="https://github.com/user-attachments/assets/2c7ffe62-6b40-44cd-81fe-42d7b8b9e064" />
-<img width="120" height="160" alt="image" src="https://github.com/user-attachments/assets/b474f3d5-5935-49dc-9dc1-39a3c028b334" /> ## we can change the status of the note
+<img width="120" height="160" alt="image" src="https://github.com/user-attachments/assets/b474f3d5-5935-49dc-9dc1-39a3c028b334" />
 
 ## Demo Video
 https://drive.google.com/file/d/1XOAGeW5zyZampjfof9EWslyH_DDyCKr0/view?usp=drive_link
