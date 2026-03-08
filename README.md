@@ -25,7 +25,7 @@
 <img width="120" height="160" alt="image" src="https://github.com/user-attachments/assets/b474f3d5-5935-49dc-9dc1-39a3c028b334" />
 
 ## Demo Video
-https://drive.google.com/file/d/1XOAGeW5zyZampjfof9EWslyH_DDyCKr0/view?usp=drive_link
+https://drive.google.com/file/d/1esUwTCiiSSXdMky24Imd2VHuuZR0Nkf1/view?usp=drive_link
 
 
 
